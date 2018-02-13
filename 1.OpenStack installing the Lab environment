@@ -1,0 +1,124 @@
+In this course Configure OpenStack using PackStack
+Build an OpenStack environment
+Configure OpenStack Services
+
+after completing this course will realize the simplicity that PackStack offers
+
+prerequisites:
+  1. Knowledge of Linux administration
+  2. Working at the Linux command line
+
+2.1 What is OpenStack and the COA?
+ - Identify OpenStack Operating System
+ - Identify the COA Exam and Requirements
+ - Lab Environment Single Node
+ - Install OpenStack with PackStack
+
+History :
+ - started in 2010 by NASA
+ - Rackspace
+ - First release = Austin
+ - Current release = Newton
+
+OPenStack Operating System :
+ - Keystone - Identify services, create users, groups and regions
+ - Glance - Image services, maintaing master image and create vm
+ - Nova - Compute service
+ - Neutron - Networking
+ - Cinder - Volumes Storage
+ - Horizon - Web UI
+ 
+COA Exam Requisites:
+ - Getting to know OpenStack - 3%
+ - Identify Management - 12%
+ - Dashboard - 3
+ - compute - 15
+ - Object Storage - 10
+ - Block Storage - 10
+ - Networking - 16
+ - Heat - 8
+ - Troubleshooting - 13
+ - Image Management - 10
+
+Pass 76% 
+
+Lab Environment ( Single Node)
+
+Virtualization Host CentOS 7.2 KVM (192.168.56.1) --> Packstack Centos 7 (192.168.56.5)4
+
+Lab Evnironment (Multi-Node)
+Virtualization Host CentOS 7.2 KVM (192.168.56.1)
+Virtual Machine 1 : Controller - Ubuntu 14.04 (192.168.56.6)
+Virtual Machine 2 : Compute  - Ubuntu 14.04 (192.168.56.7)
+
+Single Node - PackStack : Installing OpenStack is time consuming and laborious. It is also not a requirement for the exam. So for the COA series we will use PackStack to install OpenStack in a single-node environment. This is simple and reliable.
+
+The default install does not allow connectivity to the outside world. TO overcome this we add a few customizations into the install.
+
+Multi-Node Manual Install : When i was first learning OpenStack I was frustrated by automated installers and wanted to understand the installprocess. For this reason we include a manual install of Openstack on ubuntu.
+
+We will, however use the Packstack install for the main COA series. This makes the manual install optional, whereas, the PackStack install is mandatory if you are to follow the subsequent courses.
+
+2.2 Preparing the install of OpenStack with PackStack
+----------------------------------------------------
+
+Start with a Minimal install of CentOS 7
+- We will start with a minimal install of CentOS 7 without any GUI. The VM or physical hardware requires 20GB Disk and 4GB RAM. Configured with a static IP Address. Then stop firewalld and Network Manager and ensure the network service is running.
+
+# systemctl disable firewalld NetworkManager
+# systemctl stop firewalld NetworkManager
+# systemctl start network
+# systemctl enable network
+
+Set-up Repos
+ - We use the Liberty release of OpenStack to match the current Spring 2017 Exam
+ 
+ # yum install -y centos-release-openstack-liberty
+ # yum install -y back-completion vim epel - release
+ # yum upgrade -y
+ # reboot
+ 
+ # yum install -y openstack-packstack
+ 
+ Create Answer File and Start Intall
+ 
+ #We can set parameters for the install in the answer file. We can edit this with vim or use sed. A script is provided within the exercise files using sed to edit the answer file. Allow up to 1 hour for the install or ore depending on hardware
+ 
+ # packstack --gen-answer-file=/root/answers.txt
+ # vim answers.txt or use sed
+ # packstack --answer-file=/root/answers/txt
+ 
+ Check for KVM SUpport:
+ - Your Hardware or virtual machine may or may not support KVM as a hypervisor. We have the choice of qumu or kvm. The default is qemu but if we support KVM we need to change the setting.
+ 
+ # grep -Ec '(vmx|svm)' /proc/cpuinfo # 0 =qemu >=1 =kvm
+ # If KVM is supported edit /etc/nova/nova.conf
+ # systemctl restart openstack-nova-compute-service
+ 
+ -----------
+ 2.3 Installing OpenStack with packstack
+ ---------------------------------------
+ 
+ yum install -y centos-relase-openstack-liberty.noarch
+ 
+ yum install -y bash-completion vim epel-release.noarch
+ 
+ yum upgrade -y
+ 
+ yum install -y openstack-packstack
+ 
+ packstack --gen-answer-file=answers.txt
+ vim answers.txt
+ 
+ vim answer.sh
+ remove ntp_serves ip
+ 
+ bash answer.sh
+ 
+ packstack --answer-file=answers.txt
+ 
+ 
+ 
+ 
+ 
+ 
