@@ -1,0 +1,565 @@
+Keystone:
+
+#Create a service:
+openstack service create --name comics --description "Marvel Comic Book Service" books
+
+Openstack service list
+
+# delete service:
+openstack service delete comics
+#verify
+openstack service list
+
+#modify the service
+openstack service set --help | less
+
+openstack service set --description "Openstack Comic Book Service" comics
+
+#verify
+openstack service show comics
+openstack service list
+
+#Create EndPoints
+openstack endpoint create --help | less
+
+openstack endpoint create --region RegionOne books admin http://104.239.168.43:616
+openstack endpoint create --region RegionOne books internal http://104.239.168.43:616
+openstack endpoint create --region RegionOne books public http://104.239.168.43:616
+
+#delete the endpoint
+openstack endpoint delete <<ID>>
+
+#openstack endpooint list --help
+
+#openstack endpoint list --service books
+#openstack endpoint set --help | less
+
+#openstack endpoint set --url http://104.239.168.43:616 <<ID>>
+#openstack endpoint show <<id>>
+
+#openstack endpoint list --service books
+
+--> Projects, users and Roles:
+-------
+#openstack project --help
+
+#list of all projects
+openstack projecct list
+
+#openstack create --help | less
+
+#Create Project
+#openstack project create --domain default --description "Marvel Comics Project" marvel
+
+#verify
+openstack project list
+
+#check details:
+openstack project show marvel
+
+#delete project
+openstack project delete marvel
+openstack project list
+
+#openstack project set --help | less
+
+#openstack project set --description "Marvel Comic Books Project" marvel
+
+#openstack project show marvel
+
+#openstack project show <<ID>>
+
+user:
+-----
+#openstack user --help
+
+#openstack user list
+#openstack user create --help | less
+
+Creating a user:
+#openstack user create --password-prompt lee
+#openstack user list
+
+#openstack user show less
+
+#Edit passwords
+#openstack user set --help | less
+
+#openstack user set --email "stanlee@marvel.com" lee
+#openstack user show lee
+
+#openstack user delete lee
+
+Roles:
+-------
+openstack role --help
+# openstack role list
+
+#openstack role add --help | less
+
+# openstack role add --project marvel --user lee _member_
+#openstack role create --help | less
+
+# openstack role create writer
+# openstack role show writer
+
+#openstack role delete writer
+#openstack role create author
+
+verify
+#openstack role list
+#openstack role add --project marvel --user lee author
+
+#openstack role assignment list --names --project marvel --user lee
+
+---
+Managing Groups and Domains:
+---
+#openstack group --help
+
+#openstack group create --help
+#openstack group create writers
+
+#modify/add
+openstack group set --help | less
+openstack group set --description "Marvel Writers Group" writers
+openstack group show writers
+
+#openstack user create --password-prompt claremont
+
+#openstack role add --project marvel --user claremont _member_
+#openstack role remove --project marvel --user lee author 
+#openstack group add user --help | less
+
+#openstack group add user writers clearmont
+#openstack group add user writers lee
+
+#openstack group contains writers lee
+#openstack group contains writers claremont
+
+#openstack role add --project marvel --group writers author
+#openstack role assignment list --names --project marvel --group writers
+
+#remove user from user
+#openstack group remove user writers claremont
+
+#delete user
+#openstack group remove user writers claremont
+#openstack group delete writers
+#openstack group list
+
+--
+domain:
+---
+openstack domain --help
+#openstack domain create editors
+
+#openstack domain set --help | less
+#openstack domain set --description "Marvel Editors Domain" editors
+#openstack domain show editors
+#openstack domain list
+
+#openstack project create --domain editors files
+#openstack user create --domain editos joe
+#openstack domain show editos
+
+#delete editors
+#openstack domin set --disable editos
+#openstack domaindiable editoring
+
+*********
+Managing Images:
+---
+openstack image --help
+openstack image list
+
+#download image
+wget https://cloud-images.ubuntu.com/trusty/current/trusty-server-cloudimg-amd64.disk1.img
+
+#openstack image create --help | less
+#openstack image create --container-format bare --disk-format qcow2 --project marvel --file trusy-sever-cloudimg-amd64-disk1.img marvel-ubuntu
+
+#openstack image list
+
+#mame image public
+openstack image show marvel-ubuntu(Check Visibility make it private)
+
+#openstack image set --help | less
+
+#openstack image set --public marvel-ubuntu
+#openstack image show marvel-ubuntu
+
+save the file locally
+#openstack image save --help | less
+
+#openstack image save --file cirros.img cirros
+
+#delete the image
+#openstack image delete marvel-ubuntu
+
+************
+Openstack Networking Service - Neutron:
+---------
+Managing Networks:
+#openstack network --help
+#openstack network create --help | less
+
+#openstack network list
+
+#openstack network create --share --provider-physical-network external --external --provider-network-type flat marvel-net
+
+#openstack network delete marvel-net
+
+#openstack network create marvel-net
+
+#openstack subnet --help 
+
+#openstack subnet create --help | less
+
+#openstack subnet create --network marvel-net --dns-nameserver 8.8.8.8 --subnet-range 192.168.168.4.0/24 --gateway 192.168.4.1 --allocation-pool start=192.168.4.100,end=192.168.4.250 marvel-net-subnet
+
+#openstack subnet list
+
+#opesnstack router --help
+
+#openstack router create --help | less
+
+#openstack router create marvel-net
+
+#openstack router show marvel-rtr
+#openstack router list
+#openstack router list --long
+
+#openstack router add subnet marvel-rtr marvel-net-subnet
+
+#neutron router-gateway-set marvel-rtr public
+
+#openstack floating ip --help
+
+#openstack floating ip create --help | less
+#openstack floating ip create public
+
+#openstack router remvoe subnet marvel-rt marvel-net-subnet
+
+#openstack router delete marvel-rtr
+#openstack subnet delete marvel-net-subnet
+#openstack network delete marvel-net
+#openstack network list
+
+*******
+Managing Security Groups:
+----
+#openstack security group --help
+#openstack security group create --help
+
+#openstack security group create --project marvel --desccrption "SSH and ICMP for Marvel Project" marvel-ssh-icmp
+
+#openstack security group rule create --help | less
+
+#openstack security group rule create --protocol tcp --dst-port 22 --src-ip 0.0.0.0/0 marvel-ssh-icmp
+
+#openstack security group rule create --protocol icmp --src-ip 0.0.0.0/0 marvel-ssh-icmp
+
+#openstack security group list
+#openstack security group show marvel-ssh-icmp
+
+#openstack security group rule list marvel-ssh-icmp
+
+#openstack security group rule delete <<ID of Marvel-ssh-icmp>>
+
+#openstack security group rule list marvel-ssh-icmp
+
+#openstack security group rule create --protocol icmp --src-ip 0.0.0.0/0 marvel-ssh-icmp
+
+*********
+Nova:
+----
+Keypaires;
+
+#openstack keypair --help
+#openstack keypair create --help | less
+
+#openstack keyparie create keyname > ~/.ssh/keyname.pem
+#chmod 600 ~/.ssh/keyname.pem
+4#openstack keypair create --public-key ~/.ssh/id_rsa.pub existing
+
+#openstack keypair list
+
+#openstack keypair show keyname
+
+#openstack keypair delete existing
+
+#openstack keypair list
+
+*****
+Managing flavors:
+----
+openstack flavor --help
+
+#openstack flavor list
+
+#openstack flavor create --help | less
+
+#openstack flavor create --id 6 --ram 12888 --disk 120 --vcpus 4 --project marvel --private
+
+#openstack flavor list
+#openstack flavor list --private
+
+#openstack flavor delete m1.marvel
+
+#openstack flavor list --private
+
+*******
+Managing Instances:
+----
+#openstack server --help | less
+
+#openstack server create --help | less
+
+#openstack server create --flavor m1.dc --image cirros --key-name newkey --security-group default dc01
+
+#openstack server list
+
+#openstack server pause dc01
+
+#openstack server unpause dc01
+
+#openstack server list
+
+#openstack server suspend dc01
+
+#openstack server list
+
+#openstack server resume dc01
+
+#openstack server show dc01
+
+#openstack server delete dc01
+
+#openstack server list
+**********
+Managing Floating IPs:
+----
+#openstack server create --flavor m1.tiny --image cirros --nic net-id-private demo1
+
+#openstack floating ip create public
+
+#openstack server add floating ip --help | less
+
+#openstack server add floating ip demo1 172.24.4.233
+
+#openstack server show demo1
+
+#openstack server remove floating ip demo1 172.24.4.23
+#openstack server show demo1
+#openstack floating ip delete 172.24.4.23
+#openstack server delete demo1
+
+******
+Managing Quotas;
+--
+#openstack quota --help
+
+#openstack quota show --help | less
+
+#openstack quota show
+#openstack quota show marvel
+
+#openstack quota set --help | less
+
+#openstack quota show marvel | grep instances
+
+#openstack quota set --instances 20 marvel
+
+#openstack quota show marvel | grep instances
+
+***********
+Object Storage - Swift:
+-----
+Managing Object Stores:
+---
+#openstack container --help
+
+#openstack container create --hel | less
+
+#openstack container create marvel-art
+
+#openstack container list
+
+#openstack container show marvel-art
+
+#openstack object --help
+
+#openstack object create --help | less
+
+#echo "Avengers Assemble" > aa.txt
+#cat aa.txt
+
+openstack object create marvel-art aa.txt
+
+#openstack object list marvel-art
+#openstack object show marvel-art aa.txt
+#openstack object save --file call.txt marvel-art aa.txt
+
+# cat call.txt
+
+#swift post --help | less
+
+#swift post marvel-art -r "marvel:*"
+
+#openstack container show marvel-art
+
+#swift post marvel-art -w "marvel"lee"
+#openstack container show marvel-art
+#swift post --help | less
+
+#find out linux time
+# date -d '2017/12/31' +%s
+
+#Adding exasperation in the object
+# swift post marvel-art aa.txt -H "X-Delete-At:<Unix time> 1514678400"
+
+#swift stat --help | less
+
+#swift state marvel-art aa.txt
+
+#swift post marvel-art aa.txt -H "X-Remove-At:"
+#swift state marvel-art aa.txt
+
+#swift post marvel-art aa.txt -H "X-Delete-After:18000"
+
+#swift stat marvel-art aa.txt
+#swift post marvel-art aa.txt -H "X-Remove-At:"
+#swift stat marvel-art aa.txt
+
+#openstack object delte marvel-art
+#openstack container delete marvel-art
+
+********
+Managing Volumes and Snapshots with Cinder:
+----
+#openstack volume --help
+
+#openstack volume create --help | less
+
+#openstack volume create --size 10 --project marvel marvel_vol01
+
+#openstack volume set --help | less
+
+#openstack volume set --description "Marvel Volume" marvel_vol01
+#openstack volume show marvel_vol01
+
+#openstack volume delete marvel_vol01
+
+#openstack server create --flavor m1.tiny --image cirros server01
+
+#openstack volume create --size 1 volume01
+
+#openstack server add volume --help | less
+
+#openstack server add volume server01 volume01 --device/dev/xvdb
+
+#openstack server show server01
+
+#openstack volume show volume01
+
+#creating back up
+#openstack volume backup create --help | less
+
+#openstack volume backup create --force --name vol01_backup volume01
+openstack volume backup list
+
+#In-order to restore volume from back up, we need to remove the volume from serverr
+#openstack serve remove volume server01 volume01
+
+#openstack volume backup restore vol01_backup volume01
+
+#tail -5 /var/log/cinder/back.log
+
+#openstack volume set --size 2 volume01
+#openstack volume list
+
+******Managing Snapshots
+****
+#openstack snapshot --help
+#openstack snapshot create --help | less
+
+#openstack volume list
+
+#Create snapshot
+#openstack snapshot create --name vol01_snapshot volume01
+
+#openstack snapshot list
+
+#openstack snapshot show vol01_snapshot
+
+#openstack snapshot delete vol01_snapshot
+
+
+*****
+Orchestration Server - Heat:
+-----
+Managing Stacks:
+----
+#wget https://raw.githubusercontent.com/openstack/heat-templates/master/hot/hello_world.ymaml --2017-06-16 22.34.08 --https://raw.githubusercontent,com/openstack/heat-templates/master/hot/hello_world.yaml
+
+#less helloworld.ymal
+#openstack state --help
+
+#openstack stack create --less
+
+#openstack stack create --parameter key_name=newkey --parameter image=cirros --parameter admin_pass=Open01 -t hello_world.yaml hello
+
+#openstack stack list
+#openstack stack show hello
+
+#openstack stack output list hello
+
+#openstack stack output show hello server_networks
+
+#openstack stack delete hello
+
+*******
+Troubleshooting:
+---
+#ls /var/log
+
+#openstack server list
+
+#cd /var/log
+grep -lr <<ID of the server>>
+
+#grep <<ID>> neutron/server.log
+
+#grep <<ID>> nova/nova-api.log
+
+#grep <<ID>> nova/nova-scheduler.log
+
+#grep <<ID>> nova/nova-scheduler.log
+
+#grep <<ID>> nova/nova-conductor.log
+
+# openstack host list
+
+#openstack host show centos7-rdo-newton
+
+#openstack server show breakthings
+
+#Compare both flavor and host
+#openstack flavor show m1.xlarge
+#openstack host show centos7-rod-newton
+
+#nova service-list
+#openstack network agent list
+
+*********
+Helpful Links:
+---
+- OpenStack COA Site:
+	- https://www.openstack.org/coa
+- OpenStack Summit Boston Panel on 'Why You Should Take the COA'
+	- https://www.openstack.org/videos/boston-2017/the-coa-and-why-you-should-take-it
+- OpenStack summit Austin Brown Bag on 'Prepping for the COA'
+	- http://bit.ly/2st9bwY
+- Superuser Article on the Newton COA Release
+	- http://superuser.openstack.org/articles/certified-openstack-administrator-exam-newton/
