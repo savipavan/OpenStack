@@ -1,0 +1,21 @@
+heat_template_version: 2015-04-30
+description: Create Volume and VM
+resources:
+  my_vm:
+    type: OS::Nova::Server
+    properties:
+      key_name: host
+      image: cirros
+      flavor: m1.tiny
+      name: vm1
+  my_vol:
+    type: OS::Cinder::Volume
+    properties:
+      size: 1
+      name: vol1
+  vol_att:
+    type: OS::Cinder::VolumeAttachment
+    properties:
+      instance_uuid: { get_resource: my_vm }
+      volume_id: { get_resource: my_vol }
+      mountpoint: /dev/vdb

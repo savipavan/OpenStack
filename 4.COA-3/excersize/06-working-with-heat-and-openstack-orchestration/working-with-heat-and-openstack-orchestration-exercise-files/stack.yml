@@ -1,0 +1,17 @@
+heat_template_version: 2015-10-15
+description: Simple Template
+resources:
+  my_vm1:
+    type: OS::Nova::Server
+    properties:
+      key_name: host
+      image: cirros
+      flavor: m1.tiny
+      name: vm1
+  my_vm2:
+    type: OS::Nova::Server
+    properties:
+      key_name: host
+      image: cirros
+      flavor: m1.tiny
+      name: vm2

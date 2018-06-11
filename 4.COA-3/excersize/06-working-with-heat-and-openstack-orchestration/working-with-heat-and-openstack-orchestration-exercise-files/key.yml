@@ -1,0 +1,8 @@
+heat_template_version: 2015-10-15
+description: KEY PAIR
+resources:
+  cloud_key:
+    type: OS::Nova::KeyPair
+    properties:
+      name: cloud
+      public_key: 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDQJn4KpHnTXsPWnkvq5F54H/wuEZ4i2U4HSBGA/AG3Qzk9xWg6u+nJzbnWN3i85RCKnb6S2CdYraYg3oaZl3k/iTTBBJOyw2Efz6O21wXzvBMST30o5Z8FHIGjELHSkDPvPZam0Bk1hFN2IHVyTBDqbn0ZNSj9EPXrp05wsy91RpqRLPnetUPhWBSirHvS4+WOlFzIoNkMbCimJmstszag02BuqsypH6Z3mjVeXd+tuGB6yWUREdFk5IlnaM+4ju9XysSfL1Veo1bb79bG9Jpf22jVwFJ7LNhYJNV6dUBxtvijfft1/xctEZf4mSzs+6/7aZbeZSXJwce2hJYaqFNV root@packstack'

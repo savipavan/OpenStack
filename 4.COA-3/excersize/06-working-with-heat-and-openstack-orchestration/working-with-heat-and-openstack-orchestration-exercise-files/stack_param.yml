@@ -1,0 +1,22 @@
+heat_template_version: 2015-10-15
+description: Simple Template
+parameters:
+  image_id:
+    type: string
+    label: Image ID
+    description: Image to be used for compute instance
+resources:
+  my_vm1:
+    type: OS::Nova::Server
+    properties:
+      key_name: host
+      image: { get_param: image_id } 
+      flavor: m1.tiny
+      name: vm1
+  my_vm2:
+    type: OS::Nova::Server
+    properties:
+      key_name: host
+      image: cirros
+      flavor: m1.tiny
+      name: vm2

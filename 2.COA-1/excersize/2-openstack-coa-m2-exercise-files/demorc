@@ -1,0 +1,31 @@
+#!/bin/bash
+
+unset OS_SERVICE_TOKEN
+unset OS_USERNAME
+unset OS_PASSWORD
+unset OS_AUTH_URL
+unset OS_TENANT_NAME
+unset OS_REGION_NAME
+
+export OS_USERNAME=demo		
+export OS_AUTH_URL=http://192.168.56.5:5000/v2.0
+export OS_TENANT_NAME=demo
+export OS_REGION_NAME=RegionOne
+
+read -srp "Enter the password for ${OS_USERNAME}: " OS_PASSWORD
+export OS_PASSWORD
+
+if openstack token issue &> /dev/null 
+then 
+	echo "You are authenticated"
+	export PS1="[\u@\h \W $OS_USERNAME ]\$ "
+	source /root/complete
+else
+ 	echo "Authenticaction failed"
+	unset OS_SERVICE_TOKEN
+	unset OS_USERNAME
+	unset OS_PASSWORD
+	unset OS_AUTH_URL
+	unset OS_TENANT_NAME
+	unset OS_REGION_NAME
+fi
